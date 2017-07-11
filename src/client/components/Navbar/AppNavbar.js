@@ -2,6 +2,7 @@
 import { LinkContainer } from 'react-router-bootstrap'
 import ServiceManager from 'SvcManager'
 import PropTypes from 'prop-types'
+import AboutDlg from 'Dialogs/AboutDlg'
 import './AppNavbar.scss'
 import React from 'react'
 import {
@@ -162,6 +163,12 @@ export default class AppNavbar extends React.Component {
           </Nav>
 
         </Navbar.Collapse>
+         <AboutDlg    
+           close={()=>{ this.setState(Object.assign({}, this.state, {    
+             aboutOpen: false    
+           }))}}   
+           open={this.state.aboutOpen}   
+         />
       </Navbar>
     )
   }
