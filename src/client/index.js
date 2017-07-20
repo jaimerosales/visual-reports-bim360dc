@@ -12,6 +12,7 @@ import StorageSvc from 'StorageSvc'
 import SocketSvc from 'SocketSvc'
 import EventSvc from 'EventSvc'
 import ForgeSvc from 'ForgeSvc'
+import TreeSvc from 'TreeSvc'
 
 // ========================================================
 // Services Initialization
@@ -44,6 +45,10 @@ const forgeSvc = new ForgeSvc({
   apiUrl: '/api/forge'
 })
 
+const treeSvc = new TreeSvc({
+  apiUrl: '/api/forge/tree'
+})
+
 // ========================================================
 // Services Registration
 // ========================================================
@@ -51,6 +56,7 @@ ServiceManager.registerService(storageSvc)
 ServiceManager.registerService(socketSvc)
 ServiceManager.registerService(eventSvc)
 ServiceManager.registerService(forgeSvc)
+ServiceManager.registerService(treeSvc)
 
 // ========================================================
 // Store Instantiation

@@ -14,6 +14,7 @@ import DerivativesAPI from './api/endpoints/derivatives'
 import SocketAPI from './api/endpoints/socket'
 import ForgeAPI from './api/endpoints/forge'
 import OssAPI from './api/endpoints/oss'
+import TreeAPI from './api/endpoints/tree-server'
 
 //Services
 import DerivativesSvc from './api/services/DerivativesSvc'
@@ -22,6 +23,7 @@ import LMVProxySvc from './api/services/LMVProxySvc'
 import SocketSvc from './api/services/SocketSvc'
 import ForgeSvc from './api/services/ForgeSvc'
 import OssSvc from './api/services/OssSvc'
+import TreeSvc from './api/services/TreeSvc'
 
 //Config (NODE_ENV dependant)
 import config from'c0nfig'
@@ -55,6 +57,8 @@ app.use(helmet())
 /////////////////////////////////////////////////////////////////////
 const derivativesSvc = new DerivativesSvc()
 
+const treeSvc = new TreeSvc()
+
 const lmvProxySvc = new LMVProxySvc({
   endpoint: config.forge.oauth.baseUri.replace('https://', '')
 })
@@ -65,6 +69,7 @@ const forgeSvc = new ForgeSvc(
 const ossSvc = new OssSvc()
 
 ServiceManager.registerService(derivativesSvc)
+ServiceManager.registerService(treeSvc)
 ServiceManager.registerService(forgeSvc)
 ServiceManager.registerService(ossSvc)
 
@@ -73,6 +78,7 @@ ServiceManager.registerService(ossSvc)
 //
 /////////////////////////////////////////////////////////////////////
 app.use('/api/forge',     ForgeAPI())
+app.use('/api/forge/tree',  TreeAPI())
 
 /////////////////////////////////////////////////////////////////////
 // Viewer GET Proxy

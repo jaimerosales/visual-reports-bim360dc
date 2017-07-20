@@ -9,6 +9,7 @@ import WidgetContainer from 'WidgetContainer'
 import { ReactLoader } from 'Loader'
 import Toolkit from 'Viewer.Toolkit'
 import Viewer from 'Viewer'
+import Tree from 'Tree'
 import './ViewerView.scss'
 import React from 'react'
 
@@ -298,12 +299,12 @@ class ViewerView extends React.Component {
 
           <div className="viewer-view">
             <ReflexContainer orientation='vertical'>
-            <ReflexElement >
+              <ReflexElement >
                  <WidgetContainer title="BIM 360">
+                 <Tree />
                  </WidgetContainer>
-               </ReflexElement>
-               <ReflexSplitter onStopResize={() => this.forceUpdate()}/>
-               
+              </ReflexElement>
+              <ReflexSplitter onStopResize={() => this.forceUpdate()}/>
               <ReflexElement>
               <ReflexContainer orientation='horizontal'>
               <ReflexSplitter/>
