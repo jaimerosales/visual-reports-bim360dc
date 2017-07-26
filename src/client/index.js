@@ -37,9 +37,7 @@ socketSvc.connect().then((socket) => {
   console.log(error)
 })
 
-const eventSvc = new EventSvc({
-
-})
+const eventSvc = new EventSvc()
 
 const forgeSvc = new ForgeSvc({
   apiUrl: '/api/forge'

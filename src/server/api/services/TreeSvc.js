@@ -27,7 +27,7 @@ export default class TreeSvc extends BaseSvc {
   /////////////////////////////////////////////////////////////////
   
 
-  getHubs(token) {
+  getTreeHubs(token) {
 
     return new Promise(async(resolve, reject) => {
     try {
@@ -75,7 +75,7 @@ export default class TreeSvc extends BaseSvc {
   })
 }
 
-getProjects(hubId, token) {
+getTreeProjects(hubId, token) {
 
   return new Promise(async(resolve, reject) => {
   
@@ -123,7 +123,7 @@ getProjects(hubId, token) {
   })
 }
 
-getProjectTopFolders (hubId, projectId, token) {
+getTreeProjectTopFolders (hubId, projectId, token) {
 
   return new Promise(async(resolve, reject) => {
   
@@ -159,7 +159,7 @@ getProjectTopFolders (hubId, projectId, token) {
   })
 }
 
-getFolderContents(projectId, folderId, token) {
+getTreeFolderContents(projectId, folderId, token) {
 
   return new Promise(async(resolve, reject) => {
 
@@ -193,7 +193,7 @@ getFolderContents(projectId, folderId, token) {
 }
 
 
-getVersions(projectId, itemId, token) {
+getTreeVersions(projectId, itemId, token) {
 
   return new Promise(async(resolve, reject) => {
 

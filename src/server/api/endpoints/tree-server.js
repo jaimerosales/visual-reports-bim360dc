@@ -6,55 +6,59 @@ module.exports = function() {
 
 var router = express.Router()
 
+
+
 router.get('/api/forge/tree', async (req, res) => {
   
 	try {
 
 		const forgeSvc = ServiceManager.getService('ForgeSvc');
 
-      	const token = await forgeSvc.get3LeggedTokenMaster(req.session)
+    const token = await forgeSvc.get3LeggedTokenMaster(req.session)
 
-      	const TreeSvc = ServiceManager.getService('TreeSvc')
+    console.log('Token', token)
 
-      	const href = decodeURIComponent(req.query.id);
+    const treeSvc = ServiceManager.getService('TreeSvc')
+
+    console.log('TreeSvc value', treeSvc)
+
+    const href = decodeURIComponent(req.query.id);
   
-  	  	if (href === '') {
-    		res.status(500).end();
-    		return;
-      	}
+  	if (href === '') {
+		  res.status(500).end();
+    	return;
+    }
 
-      	if (href === '#') {
-    	
-    		TreeSvc.getHubs(token);
-  		
-  		}
+  	if (href === '#') {    	
+      treeSvc.getTreeHubs(token);
+  	}
 
-  	 	else {
+   	else {
     
-    		const params = href.split('/');
+  		const params = href.split('/');
     
-    		const resourceName = params[params.length - 2];
+   		const resourceName = params[params.length - 2];
     
-    		const resourceId = params[params.length - 1];
+  		const resourceId = params[params.length - 1];
     
-    		switch (resourceName) {
-      			case 'hubs':
-        			TreeSvc.getProjects(resourceId, token);
-        			break;
-      			case 'projects':
-        		// for a project, first we need the top/root folder
-        			var hubId = params[params.length - 3];
-        			TreeSvc.getProjectTopFolders(hubId, resourceId/*project_id*/, token)
-        			break;
-      			case 'folders':
-        			var projectId = params[params.length - 3];
-        			TreeSvc.getFolderContents(projectId, resourceId/*folder_id*/, token);
-        			break;
-      			case 'items':
-        			var projectId = params[params.length - 3];
-        			TreeSvc.getVersions(projectId, resourceId/*item_id*/, token);
-        			break;
-    		}
+  		switch (resourceName) {
+        case 'hubs':
+        	treeSvc.getTreeProjects(resourceId, token);
+        	break;
+      	case 'projects':
+    		// for a project, first we need the top/root folder
+        	var hubId = params[params.length - 3];
+        	treeSvc.getTreeProjectTopFolders(hubId, resourceId/*project_id*/, token)
+        	break;
+      	case 'folders':
+        	var projectId = params[params.length - 3];
+        	treeSvc.getTreeFolderContents(projectId, resourceId/*folder_id*/, token);
+        	break;
+      	case 'items':
+        	var projectId = params[params.length - 3];
+        	treeSvc.getTreeVersions(projectId, resourceId/*item_id*/, token);
+        	break;
+    	}
 
 		} 
 
