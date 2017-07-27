@@ -11,8 +11,8 @@ export default class Tree extends React.Component {
     this.state = {
       }
 
-    this.treeSvc = ServiceManager.getService('TreeSvc')
-    console.log('inside of Tree Client', this.treeSvc)
+    // this.treeSvc = ServiceManager.getService('TreeSvc')
+    // console.log('inside of Tree Client', this.treeSvc)
 
   }
 
@@ -34,13 +34,9 @@ export default class Tree extends React.Component {
         'themes': {"icons": true},
         'multiple': false,
         'data': {
-          "url": this.treeSvc.api.apiUrl,
+          "url": "api/tree",
           "dataType": "json",
-          'multiple': true,
-          'data': function (node) {
-            $('#autodeskTree').jstree(true).toggle_node(node);
-            return {"id": node.id};
-          }
+          'multiple': true
         }
       },
       'types': {

@@ -34,7 +34,13 @@ export default class TreeSvc extends BaseSvc {
 
       const dmSvc = ServiceManager.getService('DMSvc')
 
+      console.log('inside of treeSVC getTreeHubs', dmSvc)
+      //console.log('inside of treeSVC token', token)
+
+
       const response = await dmSvc.getHubs(token)
+
+      console.log('this is the response from TreeSVC', response)
 
       var hubsForTree = [];
       

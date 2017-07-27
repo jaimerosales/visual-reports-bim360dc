@@ -8,7 +8,7 @@ var router = express.Router()
 
 
 
-router.get('/api/forge/tree', async (req, res) => {
+router.get('/', async (req, res) => {
   
 	try {
 
@@ -16,11 +16,11 @@ router.get('/api/forge/tree', async (req, res) => {
 
     const token = await forgeSvc.get3LeggedTokenMaster(req.session)
 
-    console.log('Token', token)
+    console.log('api Token', token)
 
     const treeSvc = ServiceManager.getService('TreeSvc')
 
-    console.log('TreeSvc value', treeSvc)
+    console.log('TreeSvc value', treeSvc.getTreeHubs(token))
 
     const href = decodeURIComponent(req.query.id);
   
@@ -30,6 +30,7 @@ router.get('/api/forge/tree', async (req, res) => {
     }
 
   	if (href === '#') {    	
+      console.log('about to call hubstree')
       treeSvc.getTreeHubs(token);
   	}
 

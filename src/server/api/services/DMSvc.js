@@ -57,7 +57,6 @@ export default class DMSvc extends BaseSvc {
   //
   /////////////////////////////////////////////////////////////////
   getHubs (token, opts = {}) {
-
     return this._hubsAPI.getHubs (
       opts, {autoRefresh:false}, token)
   }
