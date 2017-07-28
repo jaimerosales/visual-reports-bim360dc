@@ -1,7 +1,7 @@
 {
   "name": "bim360-visual-reports",
   "description": "BIM360 DM Visual Reports",
-  "repository": "https://github.com/jaimerosales/visual-reports-bim360dc.git",
+  "repository": "https://github.com/jaimerosales/visual-reports-bim360dc",
   "logo": "https://github.com/jaimerosales/visual-reports-bim360dc/resources/img/bim360.png",
   "keywords": ["autodesk", "forge", "node", "express", "dm", "bim360"],
   "env": {
