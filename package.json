@@ -1,25 +1,27 @@
 {
-  "name": "forge-react-boiler",
+  "name": "bim360-visual-reports",
   "version": "1.0.0",
-  "description": "React+ Node.js Boilerplate project for Autodesk Forge Platform Web Services",
+  "description": "React+ Node.js project for Autodesk Forge Platform Web Services with BIM 360 DM integration",
   "scripts": {
     "build-prod": "cross-env NODE_ENV=production npm run build",
     "build": "npm run clean && node webpack",
     "start": "node bin/start.js",
     "clean": "rimraf dist"
   },
-  "author": "Philippe Leefsma",
+  "author": "Jaime Rosales",
   "license": "MIT",
   "keywords": [
     "autodesk",
     "forge",
     "reactjs",
     "node.js",
-    "express"
+    "express",
+    "dm",
+    "bim360"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Autodesk-Forge/forge-react-boiler.nodejs.git"
+    "url": "git+https://github.com/jaimerosales/visual-reports-bim360dc.git"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
