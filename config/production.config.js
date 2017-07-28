@@ -3,6 +3,9 @@
 // DEVELOPMENT configuration
 //
 /////////////////////////////////////////////////////////////////////
+const HOST_URL = 'http://localhost'
+const PORT= 3000
+
 const config = {
 
   client: {
