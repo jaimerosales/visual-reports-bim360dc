@@ -57,7 +57,6 @@ export default class DMSvc extends BaseSvc {
   //
   /////////////////////////////////////////////////////////////////
   getHubs (token, opts = {}) {
-
     return this._hubsAPI.getHubs (
       opts, {autoRefresh:false}, token)
   }
@@ -79,6 +78,16 @@ export default class DMSvc extends BaseSvc {
   getProject (token, hubId, projectId) {
 
     return this._projectsAPI.getProject(
+      hubId, projectId, {autoRefresh:false}, token)
+  }
+
+  /////////////////////////////////////////////////////////////////
+  // Returns Project Top Folder content
+  //
+  /////////////////////////////////////////////////////////////////
+  getProjectTopFolders (token, hubId, projectId) {
+
+    return this._projectsAPI.getProjectTopFolders(
       hubId, projectId, {autoRefresh:false}, token)
   }
 

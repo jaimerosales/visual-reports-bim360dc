@@ -48,7 +48,7 @@ export default class ForgeSvc extends BaseSvc {
     try {
 
       const user = await this.getUser()
-
+      
       return user
 
     } catch (ex) {

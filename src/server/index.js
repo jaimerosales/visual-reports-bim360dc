@@ -10,18 +10,22 @@ import util from 'util'
 import path from 'path'
 
 //Endpoints
+import DmAPI from './api/endpoints/dm'
 import DerivativesAPI from './api/endpoints/derivatives'
 import SocketAPI from './api/endpoints/socket'
 import ForgeAPI from './api/endpoints/forge'
 import OssAPI from './api/endpoints/oss'
+import TreeAPI from './api/endpoints/tree-server'
 
 //Services
+import DmSvc from './api/services/DMSvc'
 import DerivativesSvc from './api/services/DerivativesSvc'
 import ServiceManager from './api/services/SvcManager'
 import LMVProxySvc from './api/services/LMVProxySvc'
 import SocketSvc from './api/services/SocketSvc'
 import ForgeSvc from './api/services/ForgeSvc'
 import OssSvc from './api/services/OssSvc'
+import TreeSvc from './api/services/TreeSvc'
 
 //Config (NODE_ENV dependant)
 import config from'c0nfig'
@@ -53,18 +57,29 @@ app.use(helmet())
 // Services setup
 //
 /////////////////////////////////////////////////////////////////////
+const dmSvc = new DmSvc()
+
+//console.log('from index-server dm', dmSvc)
+
 const derivativesSvc = new DerivativesSvc()
+
 
 const lmvProxySvc = new LMVProxySvc({
   endpoint: config.forge.oauth.baseUri.replace('https://', '')
 })
+
 
 const forgeSvc = new ForgeSvc(
   config.forge)
 
 const ossSvc = new OssSvc()
 
+const treeSvc = new TreeSvc()
+
+//console.log('from index-server', treeSvc)
+
 ServiceManager.registerService(derivativesSvc)
+ServiceManager.registerService(treeSvc)
 ServiceManager.registerService(forgeSvc)
 ServiceManager.registerService(ossSvc)
 
@@ -73,6 +88,7 @@ ServiceManager.registerService(ossSvc)
 //
 /////////////////////////////////////////////////////////////////////
 app.use('/api/forge',     ForgeAPI())
+app.use('/api/tree',     TreeAPI())
 
 /////////////////////////////////////////////////////////////////////
 // Viewer GET Proxy

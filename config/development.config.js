@@ -33,7 +33,8 @@ const config = {
         'data:create',
         'data:write',
         'bucket:read',
-        'bucket:create'
+        'bucket:create',
+        'account:read'
       ]
     },
 
