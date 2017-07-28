@@ -8,16 +8,11 @@ export default class Tree extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      }
-
-    // this.treeSvc = ServiceManager.getService('TreeSvc')
-    // console.log('inside of Tree Client', this.treeSvc)
-
+    this.state = {}
   }
 
   handleClick() {
-    
+
   }
 
   handleChange(e, data) {
@@ -93,12 +88,13 @@ export default class Tree extends React.Component {
   }
 
   render() {
-  
+
 
     return (
-      <div id="autodeskTree" >
-       
-      </div>
+
+      < div id = "autodeskTree" >
+      < /div > 
+
     );
   }
 }

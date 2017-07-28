@@ -5,10 +5,6 @@ import moment from 'moment'
 
 export default class TreeSvc extends BaseSvc {
 
-  /////////////////////////////////////////////////////////////////
-  //
-  //
-  /////////////////////////////////////////////////////////////////
   constructor(config) {
     super(config)
 
@@ -83,6 +79,10 @@ export default class TreeSvc extends BaseSvc {
     })
   }
 
+  /////////////////////////////////////////////////////////////////
+  // Returns Projects
+  //
+  /////////////////////////////////////////////////////////////////
 
 
   getTreeProjects(hubId, token, res) {
@@ -117,10 +117,9 @@ export default class TreeSvc extends BaseSvc {
             children: true
           });
 
-
-          res.json(projectsForTree)
-
         })
+        res.json(projectsForTree)
+
       } catch (ex) {
 
         console.log(ex)
@@ -131,6 +130,12 @@ export default class TreeSvc extends BaseSvc {
     })
   }
 
+  /////////////////////////////////////////////////////////////////
+  // Returns Project Top Folders
+  //
+  /////////////////////////////////////////////////////////////////
+
+
   getTreeProjectTopFolders(hubId, projectId, token, res) {
 
     return new Promise(async(resolve, reject) => {
@@ -138,7 +143,7 @@ export default class TreeSvc extends BaseSvc {
       try {
 
         const response = await this._projectsAPI.getProjectTopFolders(
-          hubId, projectId, {}, {
+          hubId, projectId, {
             autoRefresh: false
           }, token)
 
@@ -165,6 +170,12 @@ export default class TreeSvc extends BaseSvc {
     })
   }
 
+  /////////////////////////////////////////////////////////////////
+  // Returns Folder Content
+  //
+  /////////////////////////////////////////////////////////////////
+
+
   getTreeFolderContents(projectId, folderId, token, res) {
 
     return new Promise(async(resolve, reject) => {
@@ -179,18 +190,22 @@ export default class TreeSvc extends BaseSvc {
         var folderItemsForTree = [];
 
         response.body.data.forEach(function(item) {
-          folderItemsForTree.push({
-            id: item.links.self.href,
-            text: item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
-            type: item.type,
-            children: true
-          })
+          var displayName = item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName;
+          if (displayName !== '') { // BIM 360 Items with no displayName also don't have storage, so not file to transfer
+            folderItemsForTree.push({
+              id: item.links.self.href,
+              text: item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
+              type: item.type,
+              children: true
+            })
+          }
         })
 
         res.json(folderItemsForTree)
 
       } catch (ex) {
 
+        console.log(ex)
         res.status(ex.status || 500)
         res.json(ex)
       }
@@ -198,6 +213,10 @@ export default class TreeSvc extends BaseSvc {
 
   }
 
+  /////////////////////////////////////////////////////////////////
+  // Returns File versions
+  //
+  /////////////////////////////////////////////////////////////////
 
   getTreeVersions(projectId, itemId, token, res) {
 
@@ -213,20 +232,22 @@ export default class TreeSvc extends BaseSvc {
         var versionsForTree = [];
 
         response.body.data.forEach(function(version) {
+
           var lastModifiedTime = moment(version.attributes.lastModifiedTime);
           var days = moment().diff(lastModifiedTime, 'days')
-          var dateFormated = (versions.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
+          var dateFormated = (response.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
           versionsForTree.push({
             id: version.links.self.href,
             text: dateFormated + ' by ' + version.attributes.lastModifiedUserName,
             type: 'versions',
             children: false
           });
+
         })
         res.json(versionsForTree);
 
       } catch (ex) {
-
+        console.log(ex)
         res.status(ex.status || 500)
         res.json(ex)
       }
@@ -234,10 +255,5 @@ export default class TreeSvc extends BaseSvc {
     })
 
   }
-
-
-  // prepareItemForTree(_id, _text, _type, _children) {
-  //   return {id: _id, text: _text, type: _type, children: _children};
-  // }
 
 }

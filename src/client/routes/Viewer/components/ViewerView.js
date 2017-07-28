@@ -304,17 +304,19 @@ class ViewerView extends React.Component {
                  <Tree />
                  </WidgetContainer>
               </ReflexElement>
-              <ReflexSplitter onStopResize={() => this.forceUpdate()}/>
+
+
+            <ReflexSplitter onStopResize={() => this.forceUpdate()}/>
               <ReflexElement>
-              <ReflexContainer orientation='horizontal'>
-              <ReflexSplitter/>
-                <ReflexElement flex={0.5} propagateDimensions={true} minSize={150}>
-                  <Viewer onViewerCreated={this.onViewerCreated}/>
-                </ReflexElement>
-              <ReflexSplitter/>
-                <ReflexElement minSize={39} onResizeRate={100} onResize={() => dualExtension.onResize()}>
+                <ReflexContainer orientation='horizontal'>
+                  <ReflexSplitter/>
+                    <ReflexElement flex={0.5} propagateDimensions={true} minSize={150}>
+                      <Viewer onViewerCreated={this.onViewerCreated}/>
+                    </ReflexElement>
+                  <ReflexSplitter/>
+                    <ReflexElement minSize={39} onResizeRate={100} onResize={() => dualExtension.onResize()}>
                       <ReactLoader show={!dualExtension}/>
-                      {dualExtension && dualExtension.render()}
+                        {dualExtension && dualExtension.render()}
                     </ReflexElement>
                 </ReflexContainer>    
               </ReflexElement>
@@ -323,16 +325,16 @@ class ViewerView extends React.Component {
             <ReflexSplitter onStopResize={() => barExtension.onStopResize()}/>
               <ReflexElement>
                 <ReflexContainer orientation='horizontal'>
-                 <ReflexSplitter/>
-                  <ReflexElement minSize={39} onStopResize={() => pieExtension.onStopResize()}>
-                      <ReactLoader show={!pieExtension}/>
-                      {pieExtension && pieExtension.render()}
-                  </ReflexElement>
                   <ReflexSplitter/>
-                  <ReflexElement minSize={39} onStopResize={() => barExtension.onStopResize()}>
+                    <ReflexElement minSize={39} onStopResize={() => pieExtension.onStopResize()}>
+                      <ReactLoader show={!pieExtension}/>
+                        {pieExtension && pieExtension.render()}
+                    </ReflexElement>
+                  <ReflexSplitter/>
+                    <ReflexElement minSize={39} onStopResize={() => barExtension.onStopResize()}>
                       <ReactLoader show={!barExtension}/>
-                      {barExtension && barExtension.render()}
-                  </ReflexElement>
+                        {barExtension && barExtension.render()}
+                    </ReflexElement>
                 </ReflexContainer>
               </ReflexElement>
             </ReflexContainer>

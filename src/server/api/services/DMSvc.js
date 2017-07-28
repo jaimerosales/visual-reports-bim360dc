@@ -85,10 +85,10 @@ export default class DMSvc extends BaseSvc {
   // Returns Project Top Folder content
   //
   /////////////////////////////////////////////////////////////////
-  getProjectTopFolders (token, hubId, projectId, opts = {}) {
+  getProjectTopFolders (token, hubId, projectId) {
 
     return this._projectsAPI.getProjectTopFolders(
-      hubId, projectId, opts, {autoRefresh:false}, token)
+      hubId, projectId, {autoRefresh:false}, token)
   }
 
   /////////////////////////////////////////////////////////////////

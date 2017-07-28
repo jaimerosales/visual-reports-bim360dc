@@ -26,8 +26,9 @@ module.exports = function() {
       }
 
       if (href === '#') {
-        console.log('about to call hubstree')
+
         treeSvc.getTreeHubs(token, res);
+      
       } else {
 
         const params = href.split('/');
@@ -36,12 +37,6 @@ module.exports = function() {
 
         const resourceId = params[params.length - 1];
 
-
-        console.log('resourceName', resourceName)
-        
-        console.log('resourceId', resourceId)
-
-
         switch (resourceName) {
           case 'hubs':
             treeSvc.getTreeProjects(resourceId, token, res);
@@ -49,17 +44,14 @@ module.exports = function() {
           case 'projects':
             // for a project, first we need the top/root folder
             var hubId = params[params.length - 3];
-            console.log('hubId', hubId)
             treeSvc.getTreeProjectTopFolders(hubId, resourceId /*project_id*/ , token, res)
             break;
           case 'folders':
             var projectId = params[params.length - 3];
-            console.log('projectId', projectId)
             treeSvc.getTreeFolderContents(projectId, resourceId /*folder_id*/ , token, res);
             break;
           case 'items':
             var projectId = params[params.length - 3];
-            console.log('item projectId', projectId)
             treeSvc.getTreeVersions(projectId, resourceId /*item_id*/ , token, res);
             break;
         }
