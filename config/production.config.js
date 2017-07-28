@@ -17,21 +17,31 @@ const config = {
   forge: {
 
     oauth: {
+
+      redirectUri: `${HOST_URL}:${PORT}/api/forge/callback/oauth`,
+      authenticationUri: '/authentication/v1/authenticate',
+      refreshTokenUri: '/authentication/v1/refreshtoken',
+      authorizationUri: '/authentication/v1/authorize',
+      accessTokenUri: '/authentication/v1/gettoken',
+
+      baseUri: 'https://developer.api.autodesk.com',
       clientSecret: process.env.FORGE_CLIENT_SECRET,
       clientId: process.env.FORGE_CLIENT_ID,
+
       scope: [
         'data:read',
         'data:create',
         'data:write',
         'bucket:read',
-        'bucket:create'
+        'bucket:create',
+        'account:read'
       ]
     },
 
     viewer: {
-      viewer3D: 'https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=2.13',
-      threeJS:  'https://developer.api.autodesk.com/viewingservice/v1/viewers/three.min.js?v=2.13',
-      style:    'https://developer.api.autodesk.com/viewingservice/v1/viewers/style.min.css?v=2.13'
+      viewer3D: 'https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js?v=2.15',
+      threeJS:  'https://developer.api.autodesk.com/viewingservice/v1/viewers/three.min.js?v=2.15',
+      style:    'https://developer.api.autodesk.com/viewingservice/v1/viewers/style.min.css?v=2.15'
     }
   }
 }
