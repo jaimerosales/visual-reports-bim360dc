@@ -27,16 +27,30 @@ export default class Tree extends React.Component {
   }
 
   componentDidMount() {
-    //const haveBIM360Hub = false;
+    var haveBIM360Hub = false;
 
-     $('#autodeskTree').jstree({
+    $('#autodeskTree').jstree({
       'core': {
-        'themes': {"icons": true},
+        'themes': {
+          "icons": true
+        },
         'multiple': false,
         'data': {
           "url": "api/tree",
           "dataType": "json",
-          'multiple': true
+          'multiple': true,
+          'data': function(node) {
+            $('#autodeskTree').jstree(true).toggle_node(node);
+            return {
+              "id": node.id
+            };
+          },
+          "success": function(nodes) {
+            nodes.forEach(function(n) {
+              if (n.type === 'bim360Hubs' && n.id.indexOf('b.') > 0)
+                haveBIM360Hub = true;
+            })
+          },
         }
       },
       'types': {
@@ -72,7 +86,9 @@ export default class Tree extends React.Component {
         }
       },
       "plugins": ["types", "state", "sort"],
-      "state": {"key": "autodeskTree"}
+      "state": {
+        "key": "autodeskTree"
+      }
     });
   }
 

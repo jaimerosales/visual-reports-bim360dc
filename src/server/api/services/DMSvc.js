@@ -82,6 +82,16 @@ export default class DMSvc extends BaseSvc {
   }
 
   /////////////////////////////////////////////////////////////////
+  // Returns Project Top Folder content
+  //
+  /////////////////////////////////////////////////////////////////
+  getProjectTopFolders (token, hubId, projectId, opts = {}) {
+
+    return this._projectsAPI.getProjectTopFolders(
+      hubId, projectId, opts, {autoRefresh:false}, token)
+  }
+
+  /////////////////////////////////////////////////////////////////
   // Returns Folder
   //
   /////////////////////////////////////////////////////////////////
@@ -99,16 +109,6 @@ export default class DMSvc extends BaseSvc {
 
     return this._foldersAPI.getFolderContents(
       projectId, folderId, opts, {autoRefresh:false}, token)
-  }
-
-  /////////////////////////////////////////////////////////////////
-  // Returns Project Top Folder content
-  //
-  /////////////////////////////////////////////////////////////////
-  getProjectTopFolders (token, hubId, projectId, opts = {}) {
-
-    return this._foldersAPI.getProjectTopFolders(
-      hubId, projectId, opts, {autoRefresh:false}, token)
   }
 
   /////////////////////////////////////////////////////////////////

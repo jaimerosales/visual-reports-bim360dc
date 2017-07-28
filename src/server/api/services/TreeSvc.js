@@ -1,5 +1,7 @@
 import ServiceManager from './SvcManager'
 import BaseSvc from './BaseSvc'
+import Forge from 'forge-apis'
+import moment from 'moment'
 
 export default class TreeSvc extends BaseSvc {
 
@@ -7,8 +9,15 @@ export default class TreeSvc extends BaseSvc {
   //
   //
   /////////////////////////////////////////////////////////////////
-  constructor (config) {
-    super (config)
+  constructor(config) {
+    super(config)
+
+    this._projectsAPI = new Forge.ProjectsApi()
+    this._versionsAPI = new Forge.VersionsApi()
+    this._foldersAPI = new Forge.FoldersApi()
+    this._itemsAPI = new Forge.ItemsApi()
+    this._hubsAPI = new Forge.HubsApi()
+
   }
 
 
@@ -25,220 +34,210 @@ export default class TreeSvc extends BaseSvc {
   // Returns Hubs
   //
   /////////////////////////////////////////////////////////////////
-  
 
-  getTreeHubs(token) {
+  getTreeHubs(token, res) {
 
     return new Promise(async(resolve, reject) => {
-    try {
+      try {
 
-      const dmSvc = ServiceManager.getService('DMSvc')
+        const response = await this._hubsAPI.getHubs({}, {
+          autoRefresh: false
+        }, token)
 
-      console.log('inside of treeSVC getTreeHubs', dmSvc)
-      //console.log('inside of treeSVC token', token)
+        var hubsForTree = [];
 
+        response.body.data.forEach(function(hub) {
 
-      const response = await dmSvc.getHubs(token)
+          var hubType
 
-      console.log('this is the response from TreeSVC', response)
+          switch (hub.attributes.extension.type) {
+            case "hubs:autodesk.core:Hub":
+              hubType = "hubs";
+              break;
+            case "hubs:autodesk.a360:PersonalHub":
+              hubType = "personalHub";
+              break;
+            case "hubs:autodesk.bim360:Account":
+              hubType = "bim360Hubs";
+              break;
+          }
 
-      var hubsForTree = [];
-      
-      response.body.data.forEach(function (hub) {
+          hubsForTree.push({
+            id: hub.links.self.href,
+            text: hub.attributes.name,
+            type: hubType,
+            children: true
+          });
+        });
 
-        var hubType
-
-        switch (hub.attributes.extension.type) {
-          case "hubs:autodesk.core:Hub":
-            hubType = "hubs";
-            break;
-          case "hubs:autodesk.a360:PersonalHub":
-            hubType = "personalHub";
-            break;
-          case "hubs:autodesk.bim360:Account":
-            hubType = "bim360Hubs";
-            break;
-        }
-
-        hubsForTree.push(prepareItemForTree(
-          hub.links.self.href,
-          hub.attributes.name,
-          hubType,
-          true
-        ));
-      });
-
-      res.json(hubsForTree);
+        res.json(hubsForTree);
 
 
-    } catch (ex) {
+      } catch (ex) {
 
-      console.log(ex)
+        console.log(ex)
 
-      res.status(ex.status || 500)
-      res.json(ex)
-    }
-  })
-}
-
-getTreeProjects(hubId, token) {
-
-  return new Promise(async(resolve, reject) => {
-  
-  try {
+        res.status(ex.status || 500)
+        res.json(ex)
+      }
+    })
+  }
 
 
-      const dmSvc = ServiceManager.getService('DMSvc')
 
-      const response = await dmSvc.getProjects(token, hubId)
+  getTreeProjects(hubId, token, res) {
 
-      var projectsForTree = [];
+    return new Promise(async(resolve, reject) => {
 
-      response.body.data.forEach(function (project) {
+      try {
 
-        var projectType = 'projects';
+        const response = await this._projectsAPI.getHubProjects(hubId, {}, {
+          autoRefresh: false
+        }, token)
 
-        switch (project.attributes.extension.type) {
+        var projectsForTree = [];
 
-          case 'projects:autodesk.core:Project':
-            projectType = 'a360projects';
-            break;
-          case 'projects:autodesk.bim360:Project':
-            projectType = 'bim360projects';
-            break;
-        }
+        response.body.data.forEach(function(project) {
 
-        projectsForTree.push(prepareItemForTree(
-          project.links.self.href,
-          project.attributes.name,
-          projectType,
-          true
-        ));
+          var projectType = 'projects'
+
+          switch (project.attributes.extension.type) {
+
+            case 'projects:autodesk.core:Project':
+              projectType = 'a360projects';
+              break;
+            case 'projects:autodesk.bim360:Project':
+              projectType = 'bim360projects';
+              break;
+          }
+          projectsForTree.push({
+            id: project.links.self.href,
+            text: project.attributes.name,
+            type: projectType,
+            children: true
+          });
 
 
-      res.json(projectsForTree)
+          res.json(projectsForTree)
+
+        })
+      } catch (ex) {
+
+        console.log(ex)
+
+        res.status(ex.status || 500)
+        res.json(ex)
+      }
+    })
+  }
+
+  getTreeProjectTopFolders(hubId, projectId, token, res) {
+
+    return new Promise(async(resolve, reject) => {
+
+      try {
+
+        const response = await this._projectsAPI.getProjectTopFolders(
+          hubId, projectId, {}, {
+            autoRefresh: false
+          }, token)
+
+        var folderItemsForTree = [];
+
+        response.body.data.forEach(function(item) {
+          folderItemsForTree.push({
+            id: item.links.self.href,
+            text: item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
+            type: item.type,
+            children: true
+          })
+
+        })
+
+        res.json(folderItemsForTree);
+      } catch (ex) {
+
+        console.log(ex)
+
+        res.status(ex.status || 500)
+        res.json(ex)
+      }
+    })
+  }
+
+  getTreeFolderContents(projectId, folderId, token, res) {
+
+    return new Promise(async(resolve, reject) => {
+
+      try {
+
+        const response = await this._foldersAPI.getFolderContents(
+          projectId, folderId, {}, {
+            autoRefresh: false
+          }, token)
+
+        var folderItemsForTree = [];
+
+        response.body.data.forEach(function(item) {
+          folderItemsForTree.push({
+            id: item.links.self.href,
+            text: item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
+            type: item.type,
+            children: true
+          })
+        })
+
+        res.json(folderItemsForTree)
+
+      } catch (ex) {
+
+        res.status(ex.status || 500)
+        res.json(ex)
+      }
+    })
+
+  }
+
+
+  getTreeVersions(projectId, itemId, token, res) {
+
+    return new Promise(async(resolve, reject) => {
+
+      try {
+
+        const response = await this._itemsAPI.getItemVersions(
+          projectId, itemId, {}, {
+            autoRefresh: false
+          }, token)
+
+        var versionsForTree = [];
+
+        response.body.data.forEach(function(version) {
+          var lastModifiedTime = moment(version.attributes.lastModifiedTime);
+          var days = moment().diff(lastModifiedTime, 'days')
+          var dateFormated = (versions.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
+          versionsForTree.push({
+            id: version.links.self.href,
+            text: dateFormated + ' by ' + version.attributes.lastModifiedUserName,
+            type: 'versions',
+            children: false
+          });
+        })
+        res.json(versionsForTree);
+
+      } catch (ex) {
+
+        res.status(ex.status || 500)
+        res.json(ex)
+      }
 
     })
-    }catch (ex) {
 
-      console.log(ex)
-
-      res.status(ex.status || 500)
-      res.json(ex)
-    }
-  })
-}
-
-getTreeProjectTopFolders (hubId, projectId, token) {
-
-  return new Promise(async(resolve, reject) => {
-  
-  try {
-
-      const dmSvc = ServiceManager.getService('DMSvc')
-
-      const response = await dmSvc.getProjectTopFolders(
-      token, hubId, projectId)
-
-      const folderItemsForTree = [];
-
-      response.body.data.forEach(function (item) {
-        folderItemsForTree.push(prepareItemForTree(
-          item.links.self.href,
-          item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
-          item.type,
-          true
-        ))
-
-      })
-
-      res.json(folderItemsForTree);
-    }
-  
-    catch (ex) {
-
-      console.log(ex)
-
-      res.status(ex.status || 500)
-      res.json(ex)
-    }
-  })
-}
-
-getTreeFolderContents(projectId, folderId, token) {
-
-  return new Promise(async(resolve, reject) => {
-
-  try {
-
-      const dmSvc = ServiceManager.getService('DMSvc')
-
-      const response = await dmSvc.getFolderContent(
-        token, projectId, folderId)
-
-      const folderItemsForTree = [];
-
-      response.body.data.forEach(function (item) {
-        folderItemsForTree.push(prepareItemForTree(
-          item.links.self.href,
-          item.attributes.displayName == null ? item.attributes.name : item.attributes.displayName,
-          item.type,
-          true
-        ))
-      })
-
-      res.json(folderItemsForTree)
-
-    } catch (ex) {
-
-      res.status(ex.status || 500)
-      res.json(ex)
-    }
-  })
-
-}
+  }
 
 
-getTreeVersions(projectId, itemId, token) {
-
-  return new Promise(async(resolve, reject) => {
-
-  try {
-
-      const dmSvc = ServiceManager.getService('DMSvc')
-
-      const response = await dmSvc.getItemVersions(
-        token, projectId, itemId)
-
-      const versionsForTree = [];
-
-      response.body.data.forEach(function (version) {
-        var moment = require('moment');
-        var lastModifiedTime = moment(version.attributes.lastModifiedTime);
-        var days = moment().diff(lastModifiedTime, 'days')
-        var dateFormated = (versions.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
-        versionsForTree.push(prepareItemForTree(
-          version.links.self.href,
-          dateFormated + ' by ' + version.attributes.lastModifiedUserName,
-          'versions',
-          false
-        ));
-      })
-      res.json(versionsForTree);
-
-    } catch (ex) {
-
-      res.status(ex.status || 500)
-      res.json(ex)
-    }
-
-  })
-
-}
-
-
-prepareItemForTree(_id, _text, _type, _children) {
-  return {id: _id, text: _text, type: _type, children: _children};
-}
+  // prepareItemForTree(_id, _text, _type, _children) {
+  //   return {id: _id, text: _text, type: _type, children: _children};
+  // }
 
 }

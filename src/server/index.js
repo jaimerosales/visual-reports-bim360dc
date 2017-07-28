@@ -59,7 +59,7 @@ app.use(helmet())
 /////////////////////////////////////////////////////////////////////
 const dmSvc = new DmSvc()
 
-console.log('from index-server dm', dmSvc)
+//console.log('from index-server dm', dmSvc)
 
 const derivativesSvc = new DerivativesSvc()
 
@@ -76,7 +76,7 @@ const ossSvc = new OssSvc()
 
 const treeSvc = new TreeSvc()
 
-console.log('from index-server', treeSvc)
+//console.log('from index-server', treeSvc)
 
 ServiceManager.registerService(derivativesSvc)
 ServiceManager.registerService(treeSvc)
