@@ -1,9 +1,9 @@
 {
-  "name": "forge-react-boiler",
-  "description": "Forge React Boiler",
-  "repository": "https://github.com/Autodesk-Forge/forge-react-boiler.nodejs",
-  "logo": "https://github.com/Autodesk-Forge/forge-react-boiler.nodejs/resources/img/forge.png",
-  "keywords": ["autodesk", "forge", "node", "express"],
+  "name": "bim360-visual-reports",
+  "description": "BIM360 DM Visual Reports",
+  "repository": "https://github.com/jaimerosales/visual-reports-bim360dc.git",
+  "logo": "https://github.com/jaimerosales/visual-reports-bim360dc/resources/img/bim360.png",
+  "keywords": ["autodesk", "forge", "node", "express", "dm", "bim360"],
   "env": {
     "NODE_ENV": {
       "description": "Environment, defaulted to production",
