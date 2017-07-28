@@ -18,6 +18,10 @@
     },
     "FORGE_CLIENT_SECRET": {
       "description": "Your Forge Client Secret API Key"
+    },
+    "FORGE_CALLBACK_URL": {
+      "description": "Callback URL of your Forge app, required for 3-legged OAuth",
+      "value": "https://<<YOUR HEROKU APP NAME HERE>>.herokuapp.com/api/forge/callback/oauth"
     }
   }
 }

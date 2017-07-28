@@ -3,8 +3,6 @@
 // DEVELOPMENT configuration
 //
 /////////////////////////////////////////////////////////////////////
-const HOST_URL = 'http://localhost'
-const PORT= 3000
 
 const config = {
 
@@ -21,7 +19,7 @@ const config = {
 
     oauth: {
 
-      redirectUri: `${HOST_URL}:${PORT}/api/forge/callback/oauth`,
+      redirectUri: process.env.FORGE_CALLBACK_URL,
       authenticationUri: '/authentication/v1/authenticate',
       refreshTokenUri: '/authentication/v1/refreshtoken',
       authorizationUri: '/authentication/v1/authorize',
