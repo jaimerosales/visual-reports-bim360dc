@@ -9,7 +9,7 @@ const config = {
     // this the public host name of your server for the
     // client socket to connect.
     // eg. https://myforgeapp.mydomain.com
-    host: 'https://bim360-visual-reports.herokuapp.com/',
+    host: 'https://bim360-visual-report.herokuapp.com/',
     env: 'production',
     port: 443
   },
