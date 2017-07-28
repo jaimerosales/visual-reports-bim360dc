@@ -13,12 +13,13 @@ class HomeView extends React.Component {
     super()
 
     this.state = {
+
+
       models: [
         {
-          //path: 'resources/models/seat/seat.svf',
+          thumbnail: 'resources/img/Office.png',
           // PRODUCTION
           urn: 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YWVjbW9kZWxzLXZpc3VhbHJlcG9ydHMtcHJvZGtlcGg5eHZ3a3BvbDJrZm9memd2ZHUwZ3hpa2RqdWc4L1VyYmFuSG91c2UtMjAxNS5ydnQ',
-          
           // DEVELOPMENT
           //urn: 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6amFpbWV2aXN1YWxyZXBzYmltMzYwZG9jczFnc2Jtb3NlYnp4a2cyY3RhNW0wZWtsMDNubXN6dzF0L1VyYmFuSG91c2UtMjAxNS5ydnQ',
           thumbnailClass: 'office-thumbnail',
