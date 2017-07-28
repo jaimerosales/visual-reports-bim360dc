@@ -37,7 +37,7 @@ import config from'c0nfig'
 const app = express()
 
 app.use(session({
-  secret: 'visual-bim-docs',
+  secret: 'bim360-visual-reports',
   cookie: {
     secure: false,
     maxAge: 1000 * 60 * 60 * 24 // 24h session
