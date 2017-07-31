@@ -89,13 +89,17 @@ export default class Tree extends React.Component {
     }).bind("activate_node.jstree", function(evt, data) {
       if (data != null && data.node != null && data.node.type == 'versions') {
         alert('Working on this implementation - be patient')
+        debugger
         console.log('data node',data)
         if (data.node.id === 'not_available') {
           alert('No viewable available for this version');
           return;
         }
-        // var parent_node = $('#autodeskTree').jstree(true).get_node(data.node.parent);
-        // loadDocument(data.node.id, parent_node.text);
+        var parent_node = $('#autodeskTree').jstree(true).get_node(data.node.parent);
+        console.log('this is the URN of the selected version that I need to load', data.node.id)
+        console.log('this is the name of it', parent_node.text)
+        //loadDocument(data.node.id); // loading URN of selected version
+        //$.notify("loading... " + parent_node.text, { className: "info", position:"bottom right" });
       }
     });
   }
