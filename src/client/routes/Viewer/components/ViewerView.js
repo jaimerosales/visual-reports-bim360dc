@@ -4,12 +4,13 @@ import ContextMenuExtensionId from 'Viewing.Extension.ContextMenu'
 import DualExtensionId from 'Viewing.Extension.DualViewer'
 import PieExtensionId from 'Viewing.Extension.PieChart'
 import BarExtensionId from 'Viewing.Extension.BarChart'
+import TreeExtensionId from 'Viewing.Extension.Tree'
 
 import WidgetContainer from 'WidgetContainer'
 import { ReactLoader } from 'Loader'
 import Toolkit from 'Viewer.Toolkit'
 import Viewer from 'Viewer'
-import Tree from 'Tree'
+//import Tree from 'Tree'
 import './ViewerView.scss'
 import React from 'react'
 
@@ -24,11 +25,12 @@ class ViewerView extends React.Component {
       super ()
 
       this.onViewerCreated = this.onViewerCreated.bind(this)
-     
+          
       this.state = {
         dualExtension: null,
         barExtension: null,
-        pieExtension: null
+        pieExtension: null,
+        treeExtension: null
       }
    }
 
@@ -156,6 +158,7 @@ class ViewerView extends React.Component {
           //Autodesk.Viewing.Private.logger.setLevel(0)
         }
 
+       
         if (id) {
 
           // load by database id lookup
@@ -231,6 +234,14 @@ class ViewerView extends React.Component {
           }
         }
 
+        viewer.loadExtension(TreeExtensionId, 
+          Object.assign({}, extOptions(TreeExtensionId), {
+            viewerDocument: doc
+          })).then((treeExtension) => {
+            this.assignState({
+              treeExtension
+            })
+        })
 
         viewer.loadExtension(DualExtensionId, 
           Object.assign({}, extOptions(DualExtensionId), {
@@ -284,6 +295,7 @@ class ViewerView extends React.Component {
       }
    }
 
+
   
    /////////////////////////////////////////////////////////
    //
@@ -291,6 +303,7 @@ class ViewerView extends React.Component {
    /////////////////////////////////////////////////////////
    render() {
 
+        const {treeExtension} = this.state
         const {dualExtension} = this.state
         const {pieExtension}  = this.state
         const {barExtension}  = this.state
@@ -301,7 +314,7 @@ class ViewerView extends React.Component {
             <ReflexContainer orientation='vertical'>
               <ReflexElement >
                  <WidgetContainer title="BIM 360">
-                 <Tree />
+                  {treeExtension && treeExtension.render()}
                  </WidgetContainer>
               </ReflexElement>
 
