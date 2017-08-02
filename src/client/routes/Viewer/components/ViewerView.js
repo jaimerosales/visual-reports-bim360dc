@@ -1,4 +1,8 @@
-import {ReflexContainer, ReflexElement, ReflexSplitter} from 'react-reflex'
+import {
+  ReflexContainer,
+  ReflexElement,
+  ReflexSplitter
+} from 'react-reflex'
 
 import ContextMenuExtensionId from 'Viewing.Extension.ContextMenu'
 import DualExtensionId from 'Viewing.Extension.DualViewer'
@@ -7,7 +11,9 @@ import BarExtensionId from 'Viewing.Extension.BarChart'
 import TreeExtensionId from 'Viewing.Extension.Tree'
 
 import WidgetContainer from 'WidgetContainer'
-import { ReactLoader } from 'Loader'
+import {
+  ReactLoader
+} from 'Loader'
 import Toolkit from 'Viewer.Toolkit'
 import Viewer from 'Viewer'
 //import Tree from 'Tree'
@@ -16,80 +22,78 @@ import React from 'react'
 
 class ViewerView extends React.Component {
 
-   /////////////////////////////////////////////////////////
-   //
-   //
-   /////////////////////////////////////////////////////////
-   constructor () {
+    /////////////////////////////////////////////////////////
+    //
+    //
+    /////////////////////////////////////////////////////////
+    constructor() {
 
-      super ()
+      super()
 
       this.onViewerCreated = this.onViewerCreated.bind(this)
-          
+
       this.state = {
         dualExtension: null,
         barExtension: null,
         pieExtension: null,
         treeExtension: null
       }
-   }
+    }
 
-   componentWillMount() {
-   
-     this.props.setNavbarState({
-      links: {
-        login: true
-      }
-     })
-   }
+    componentWillMount() {
 
-   /////////////////////////////////////////////////////////
-   // Initialize viewer environment
-   //
-   /////////////////////////////////////////////////////////
-   initialize (options) {
+      this.props.setNavbarState({
+        links: {
+          login: true
+        }
+      })
+    }
+
+    /////////////////////////////////////////////////////////
+    // Initialize viewer environment
+    //
+    /////////////////////////////////////////////////////////
+    initialize(options) {
 
       return new Promise((resolve, reject) => {
 
-        Autodesk.Viewing.Initializer (options, () => {
+        Autodesk.Viewing.Initializer(options, () => {
 
-          resolve ()
+          resolve()
 
         }, (error) => {
 
-          reject (error)
+          reject(error)
         })
       })
-   }
+    }
 
-   /////////////////////////////////////////////////////////
-   // Load a document from URN
-   //
-   /////////////////////////////////////////////////////////
-   loadDocument (urn) {
+    /////////////////////////////////////////////////////////
+    // Load a document from URN
+    //
+    /////////////////////////////////////////////////////////
+    loadDocument(urn) {
 
       return new Promise((resolve, reject) => {
 
-        const paramUrn = !urn.startsWith('urn:')
-          ? 'urn:' + urn
-          : urn
+        const paramUrn = !urn.startsWith('urn:') ? 'urn:' + urn : urn
 
         Autodesk.Viewing.Document.load(paramUrn, (doc) => {
 
-          resolve (doc)
+          resolve(doc)
 
         }, (error) => {
 
-          reject (error)
+          reject(error)
         })
       })
-   }
+    }
 
-   /////////////////////////////////////////////////////////
-   // Return viewable path: first 3d or 2d item by default
-   //
-   /////////////////////////////////////////////////////////
-   getViewablePath (doc, pathIdx = 0, roles = ['3d', '2d']) {
+    /////////////////////////////////////////////////////////
+    // Return viewable path: first 3d or 2d item by default
+    //
+    /////////////////////////////////////////////////////////
+    getViewablePath(doc, pathIdx = 0, roles = ['3d', '2d']) {
 
       const rootItem = doc.getRootItem()
 
@@ -99,9 +103,13 @@ class ViewerView extends React.Component {
 
       roleArray.forEach((role) => {
 
-        items = [ ...items,
+        items = [...items,
           ...Autodesk.Viewing.Document.getSubItemsWithProperties(
-            rootItem, { type: 'geometry', role }, true) ]
+            rootItem, {
+              type: 'geometry',
+              role
+            }, true)
+        ]
       })
 
       if (!items.length || pathIdx > items.length) {
@@ -110,32 +118,37 @@ class ViewerView extends React.Component {
       }
 
       return doc.getViewablePath(items[pathIdx])
-   }
+    }
 
 
-   assignState (state) {
+    assignState(state) {
 
-    return new Promise((resolve) => {
+      return new Promise((resolve) => {
 
-      const newState = Object.assign({}, this.state, state)
+        const newState = Object.assign({}, this.state, state)
 
-      this.setState(newState, () => {
-        resolve()
+        this.setState(newState, () => {
+          resolve()
+        })
       })
-    })
-   }
+    }
 
-   /////////////////////////////////////////////////////////
-   // viewer div and component created
-   //
-   /////////////////////////////////////////////////////////
-   async onViewerCreated (viewer) {
+    /////////////////////////////////////////////////////////
+    // viewer div and component created
+    //
+    /////////////////////////////////////////////////////////
+    async onViewerCreated(viewer) {
 
       try {
 
         let doc = null
 
-        let { id, urn, path, pathIdx } = this.props.location.query
+        let {
+          id,
+          urn,
+          path,
+          pathIdx
+        } = this.props.location.query
 
         // check if env is initialized
         // initializer cannot be invoked more than once
@@ -158,20 +171,11 @@ class ViewerView extends React.Component {
           //Autodesk.Viewing.Private.logger.setLevel(0)
         }
 
-       
-        if (id) {
+        if (urn) {
 
-          // load by database id lookup
-          // !NOT IMPLEMENTED HERE
-          // could be something like:
-          // const dbModel = getDBModelBy(id)
-          // urn = dbModel.urn
+          doc = await this.loadDocument(urn)
 
-        } else if (urn) {
-
-          doc = await this.loadDocument (urn)
-
-          path = this.getViewablePath (doc, pathIdx || 0)
+          path = this.getViewablePath(doc, pathIdx || 0)
 
         } else if (!path) {
 
@@ -183,108 +187,7 @@ class ViewerView extends React.Component {
 
         viewer.start()
 
-        const extOptions = (id) => {
-
-          return {
-            react: {
-
-              pushRenderExtension: () => {},
-
-              pushViewerPanel: () => {},
-
-              popRenderExtension: () => {},
-
-              popViewerPanel: () => {},
-
-              forceUpdate: () => {
-
-                return new Promise ((resolve) => {
-                  this.forceUpdate(() => {
-                    resolve()
-                  })
-                })
-              },
-              getComponent: () => {
-
-                return this
-              },
-              getState: () => {
-
-                return this.state[id] || {}
-              },
-              setState: (state, merge) => {
-
-                return new Promise ((resolve) => {
-
-                  const extState = this.state[id] || {}
-
-                  var newExtState = {}
-
-                  newExtState[id] = merge
-                    ? _.merge({}, extState, state)
-                    : Object.assign({}, extState, state)
-
-                  this.assignState(newExtState).then(() => {
-
-                    resolve (newExtState)
-                  })
-                })
-              }
-            }
-          }
-        }
-
-        viewer.loadExtension(TreeExtensionId, 
-          Object.assign({}, extOptions(TreeExtensionId), {
-            viewerDocument: doc
-          })).then((treeExtension) => {
-            this.assignState({
-              treeExtension
-            })
-        })
-
-        viewer.loadExtension(DualExtensionId, 
-          Object.assign({}, extOptions(DualExtensionId), {
-            viewerDocument: doc
-          })).then((dualExtension) => {
-            this.assignState({
-              dualExtension
-            })
-        })
-
-        viewer.loadExtension(BarExtensionId, 
-          Object.assign({}, extOptions(BarExtensionId), {
-            defaultIndex: 60 // Category
-          }
-          )).then((barExtension) => {
-            this.assignState({
-              barExtension
-            })
-          })
-
-        viewer.loadExtension(PieExtensionId, 
-          Object.assign({}, extOptions(PieExtensionId), {
-            defaultIndex: 534 // System Type
-          }
-          )).then((pieExtension) => {
-            this.assignState({
-              pieExtension
-            })
-          })
-
-        viewer.loadExtension(
-          ContextMenuExtensionId, {
-            buildMenu: (menu, selectedDbId) => {
-              return !selectedDbId
-                ? [{
-                title: 'Show all objects',
-                target: () => {
-                  Toolkit.isolateFull(this.viewer)
-                  this.viewer.fitToView()
-                }}]
-                : menu
-            }
-          })
+        this.loadExtensions(viewer, doc)
 
         viewer.loadModel(path)
 
@@ -293,8 +196,108 @@ class ViewerView extends React.Component {
         console.log('Viewer Initialization Error: ')
         console.log(ex)
       }
-   }
+    }
 
+    loadExtensions(viewer, doc) {
+
+      const extOptions = (id) => {
+
+        return {
+          react: {
+
+            pushRenderExtension: () => {},
+
+            pushViewerPanel: () => {},
+
+            popRenderExtension: () => {},
+
+            popViewerPanel: () => {},
+
+            forceUpdate: () => {
+
+              return new Promise((resolve) => {
+                this.forceUpdate(() => {
+                  resolve()
+                })
+              })
+            },
+            getComponent: () => {
+
+              return this
+            },
+            getState: () => {
+
+              return this.state[id] || {}
+            },
+            setState: (state, merge) => {
+
+              return new Promise((resolve) => {
+
+                const extState = this.state[id] || {}
+
+                var newExtState = {}
+
+                newExtState[id] = merge ? _.merge({}, extState, state) : Object.assign({}, extState, state)
+
+                this.assignState(newExtState).then(() => {
+
+                  resolve(newExtState)
+                })
+              })
+            }
+          }
+        }
+      }
+
+      viewer.loadExtension(TreeExtensionId,
+        Object.assign({}, extOptions(TreeExtensionId), {
+          viewerDocument: doc
+        })).then((treeExtension) => {
+        this.assignState({
+          treeExtension
+        })
+      })
+
+      viewer.loadExtension(DualExtensionId,
+        Object.assign({}, extOptions(DualExtensionId), {
+          viewerDocument: doc
+        })).then((dualExtension) => {
+        this.assignState({
+          dualExtension
+        })
+      })
+
+      viewer.loadExtension(BarExtensionId,
+        Object.assign({}, extOptions(BarExtensionId), {
+          // defaultIndex: 60 // Category
+        })).then((barExtension) => {
+        this.assignState({
+          barExtension
+        })
+      })
+
+      viewer.loadExtension(PieExtensionId,
+        Object.assign({}, extOptions(PieExtensionId), {
+          // defaultIndex: 534 // System Type
+        })).then((pieExtension) => {
+        this.assignState({
+          pieExtension
+        })
+      })
+
+      viewer.loadExtension(
+        ContextMenuExtensionId, {
+          buildMenu: (menu, selectedDbId) => {
+            return !selectedDbId ? [{
+              title: 'Show all objects',
+              target: () => {
+                Toolkit.isolateFull(this.viewer)
+                this.viewer.fitToView()
+              }
+            }] : menu
+          }
+        })
+    }
 
   
    /////////////////////////////////////////////////////////
