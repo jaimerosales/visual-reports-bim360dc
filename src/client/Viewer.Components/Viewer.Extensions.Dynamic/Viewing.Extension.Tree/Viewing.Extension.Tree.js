@@ -1,13 +1,6 @@
 import MultiModelExtensionBase from 'Viewer.MultiModelExtensionBase'
-import ExtensionBase from 'Viewer.ExtensionBase'
-import ContextMenuExtensionId from 'Viewing.Extension.ContextMenu'
 import DualExtensionId from 'Viewing.Extension.DualViewer'
-import Toolkit from 'Viewer.Toolkit'
 
-import {
-  ReactLoader as Loader
-} from 'Loader'
-import ServiceManager from 'SvcManager'
 import $ from 'jquery';
 import 'jstree/dist/jstree.min';
 import 'jstree/dist/themes/default/style.css';
