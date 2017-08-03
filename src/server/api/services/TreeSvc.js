@@ -232,12 +232,13 @@ export default class TreeSvc extends BaseSvc {
         var versionsForTree = [];
 
         response.body.data.forEach(function(version) {
-
           var lastModifiedTime = moment(version.attributes.lastModifiedTime);
           var days = moment().diff(lastModifiedTime, 'days')
           var dateFormated = (response.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
+          var designId = (version.relationships != null && version.relationships.derivatives != null ?
+          version.relationships.derivatives.data.id : null);
           versionsForTree.push({
-            id: version.links.self.href,
+            id: designId,
             text: dateFormated + ' by ' + version.attributes.lastModifiedUserName,
             type: 'versions',
             children: false
