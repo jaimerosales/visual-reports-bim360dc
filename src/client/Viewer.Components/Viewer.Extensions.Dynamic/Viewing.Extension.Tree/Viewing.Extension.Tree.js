@@ -193,6 +193,8 @@ class TreeExtension extends MultiModelExtensionBase {
 
     // Function to get DualViewer to load new Document. 
 
+    dualExt.newVersionModel(doc)
+
     viewer.impl.unloadCurrentModel()
 
     viewer.loadModel(path)

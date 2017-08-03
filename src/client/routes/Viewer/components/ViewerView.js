@@ -362,12 +362,3 @@ class ViewerView extends React.Component {
 }
 
 export default ViewerView
-
-/*
-
-               <ReflexElement minSize={139}>
-                 <WidgetContainer title="BIM 360 Docs">
-                 </WidgetContainer>
-               </ReflexElement>
-               <ReflexSplitter onStopResize={() => this.forceUpdate()}/>
-*/

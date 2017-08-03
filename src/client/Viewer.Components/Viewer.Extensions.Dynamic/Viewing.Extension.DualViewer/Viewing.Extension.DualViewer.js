@@ -176,6 +176,57 @@ class DualViewerExtension extends ExtensionBase {
   //
   //
   /////////////////////////////////////////////////////////
+  async newVersionModel (doc) {
+
+    try {
+
+      this.options.viewerDocument = doc
+
+      this.viewerDocument =
+        this.options.viewerDocument ||
+        await Toolkit.loadDocument(
+          this.options.model.urn)
+
+      const items = Toolkit.getViewableItems(
+        this.viewerDocument, '2d')
+
+      if (items.length) {
+
+        await this.react.setState({
+          disabled: false,
+          items
+        })
+
+        this.setActiveView (items[this.pathIndex])
+
+        $('#viewer-dropdown').parent().find('ul').css({
+          height: Math.min(
+            $('.dual-viewer').height() - 42,
+            items.length * 26)
+        })
+
+        this.dualViewer.addEventListener(
+          Autodesk.Viewing.SELECTION_CHANGED_EVENT, (e) => {
+
+            if (!this.selection2Locked) {
+              this.selection1Locked = true
+              this.viewer.select(e.dbIdArray)
+              this.selection1Locked = false
+            }
+          })
+      }
+
+    } catch(ex) {
+
+      console.log('Viewer Initialization Error:')
+      console.log(ex)
+    }
+  }
+
+  /////////////////////////////////////////////////////////
+  //
+  //
+  /////////////////////////////////////////////////////////
   onSelectionChanged (e) {
 
     if (!this.selection1Locked && this.dualViewer) {
