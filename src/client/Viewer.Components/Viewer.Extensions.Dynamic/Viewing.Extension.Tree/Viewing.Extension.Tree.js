@@ -47,10 +47,10 @@ class TreeExtension extends MultiModelExtensionBase {
       const model = this.viewer.activeModel ||
         this.viewer.model
 
-      if (model) {
+      // if (model) {
 
         this.loadTree(this.viewer)
-      }
+      // }
 
     })
 
@@ -75,22 +75,22 @@ class TreeExtension extends MultiModelExtensionBase {
   //
   //
   /////////////////////////////////////////////////////////
-  onModelActivated(event) {
+  // onModelActivated(event) {
 
-    if (event.source !== 'model.loaded') {
+  //   if (event.source !== 'model.loaded') {
 
-      this.loadTree(event.model)
-    }
-  }
+  //     this.loadTree(event.model)
+  //   }
+  // }
 
-  /////////////////////////////////////////////////////////
-  //
-  //
-  /////////////////////////////////////////////////////////
-  onGeometryLoaded(event) {
+  // /////////////////////////////////////////////////////////
+  // //
+  // //
+  // /////////////////////////////////////////////////////////
+  // onGeometryLoaded(event) {
 
-    this.loadTree(event.target)
-  }
+  //   this.loadTree(event.target)
+  // }
 
   loadTree(viewer) {
 
@@ -168,7 +168,11 @@ class TreeExtension extends MultiModelExtensionBase {
 
           }
 
-          this.launchViewer(data.node.id, viewer)
+        Autodesk.Viewing.setEndpointAndApi(
+          `${window.location.origin}/lmv-proxy-3legged`,
+          'modelDerivativeV2')
+
+        this.launchViewer(data.node.id, viewer)
 
         }
       })
@@ -177,25 +181,17 @@ class TreeExtension extends MultiModelExtensionBase {
 
   async launchViewer(urn, viewer) {
 
-    const lmvProxy = 'lmv-proxy-3legged'
+    viewer.impl.unloadCurrentModel()
 
     var doc = await this.loadDocument(urn)
 
     var path = this.getViewablePath(doc)
 
-    var dualExt = viewer.getExtension("Viewing.Extension.DualViewer");
+    //var dualExt = viewer.getExtension("Viewing.Extension.DualViewer");
 
     // Function to get DualViewer to load new Document. 
 
-    viewer.impl.unloadCurrentModel()
-
-    Autodesk.Viewing.setEndpointAndApi(
-      `${window.location.origin}/${lmvProxy}`,
-      'modelDerivativeV2')
-
-//    Autodesk.Viewing.Private.memoryOptimizedSvfLoading = true
-
-    dualExt.newVersionModel(doc)
+    //dualExt.newVersionModel(doc)
 
     viewer.loadModel(path)
   }
