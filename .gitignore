@@ -5,6 +5,6 @@ node_modules
 *.log
 dist
 
-
+forge_auth_dev.sh
 
 

@@ -234,14 +234,20 @@ export default class TreeSvc extends BaseSvc {
         response.body.data.forEach(function(version) {
           var lastModifiedTime = moment(version.attributes.lastModifiedTime);
           var days = moment().diff(lastModifiedTime, 'days')
+          var fileType = version.attributes.fileType
           var dateFormated = (response.body.data.length > 1 || days > 7 ? lastModifiedTime.format('MMM D, YYYY, h:mm a') : lastModifiedTime.fromNow());
+          var fileName = version.attributes.fileName;
+
           var designId = (version.relationships != null && version.relationships.derivatives != null ?
           version.relationships.derivatives.data.id : null);
+
           versionsForTree.push({
             id: designId,
             text: dateFormated + ' by ' + version.attributes.lastModifiedUserName,
             type: 'versions',
-            children: false
+            children: false,
+            fileType: fileType,
+            fileName: fileName
           });
 
         })

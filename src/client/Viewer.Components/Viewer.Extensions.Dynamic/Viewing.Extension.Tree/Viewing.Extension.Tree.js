@@ -177,6 +177,7 @@ class TreeExtension extends MultiModelExtensionBase {
 
   async launchViewer(urn, viewer) {
 
+    const lmvProxy = 'lmv-proxy-3legged'
 
     var doc = await this.loadDocument(urn)
 
@@ -186,13 +187,39 @@ class TreeExtension extends MultiModelExtensionBase {
 
     // Function to get DualViewer to load new Document. 
 
-    dualExt.newVersionModel(doc)
-
     viewer.impl.unloadCurrentModel()
 
-    viewer.loadModel(path)
+    Autodesk.Viewing.setEndpointAndApi(
+      `${window.location.origin}/${lmvProxy}`,
+      'modelDerivativeV2')
 
+//    Autodesk.Viewing.Private.memoryOptimizedSvfLoading = true
+
+    dualExt.newVersionModel(doc)
+
+    viewer.loadModel(path)
   }
+
+
+   /////////////////////////////////////////////////////////
+    // Initialize viewer environment
+    //
+    /////////////////////////////////////////////////////////
+    initialize(options) {
+
+      return new Promise((resolve, reject) => {
+
+        Autodesk.Viewing.Initializer(options, () => {
+
+          resolve()
+
+        }, (error) => {
+
+          reject(error)
+        })
+      })
+    }
+
 
 
   /////////////////////////////////////////////////////////

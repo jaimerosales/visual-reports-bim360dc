@@ -269,7 +269,16 @@ class ViewerView extends React.Component {
 
       viewer.loadExtension(BarExtensionId,
         Object.assign({}, extOptions(BarExtensionId), {
-          // defaultIndex: 60 // Category
+           "chartProperties" : [
+                                "Category", 
+                                "Flow", 
+                                "Level", 
+                                "Material", 
+                                "Reference Level", 
+                                "System Classification", 
+                                "System Name", 
+                                "System Type"
+                            ]
         })).then((barExtension) => {
         this.assignState({
           barExtension
@@ -278,7 +287,16 @@ class ViewerView extends React.Component {
 
       viewer.loadExtension(PieExtensionId,
         Object.assign({}, extOptions(PieExtensionId), {
-          // defaultIndex: 534 // System Type
+           "chartProperties" : [
+                                "Category", 
+                                "Flow", 
+                                "Level", 
+                                "Material", 
+                                "Reference Level", 
+                                "System Classification", 
+                                "System Name", 
+                                "System Type"
+                            ]
         })).then((pieExtension) => {
         this.assignState({
           pieExtension
